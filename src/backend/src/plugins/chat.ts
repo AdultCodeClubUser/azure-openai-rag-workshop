@@ -24,12 +24,12 @@ Do no repeat questions that have already been asked.
 Make sure the last question ends with ">>".`;
 
 export class ChatService {
-  tokenLimit: number = 4000;
+  protected tokenLimit: number = 4000;
 
   constructor(
-    private config: AppConfig,
-    private model: BaseChatModel,
-    private vectorStore: VectorStore,
+    protected config: AppConfig,
+    protected model: BaseChatModel,
+    protected vectorStore: VectorStore,
   ) {}
 
   async run(messages: AIChatMessage[]): Promise<AIChatCompletion> {

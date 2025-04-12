@@ -1,12 +1,15 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "dist",
+    "outDir": "./dist",
+    "rootDir": "./src",
     "sourceMap": true,
     "noUnusedLocals": false,
-     // other options
-    "module": "es2020"
+    "module": "NodeNext",
+    "moduleResolution": "nodenext",
+    "lib": ["es2021", "dom"],
+    "allowSyntheticDefaultImports": true
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["src/**/_*.ts"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
 }

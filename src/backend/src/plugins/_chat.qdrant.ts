@@ -8,6 +8,7 @@ import { type VectorStore } from '@langchain/core/vectorstores';
 import { AIChatMessage, AIChatCompletionDelta, AIChatCompletion } from '@microsoft/ai-chat-protocol';
 import { MessageBuilder } from '../lib/message-builder.js';
 import { type AppConfig } from './config.js';
+import { ChatService } from './chat.js'; // Import the unified ChatService
 
 const SYSTEM_MESSAGE_PROMPT = `Assistant helps the Consto Real Estate company customers with support questions regarding terms of service, privacy policy, and questions about support requests. Be brief in your answers.
 Answer ONLY with the facts listed in the list of sources below. If there isn't enough information below, say you don't know. Do not generate answers that don't use the sources below. If asking a clarifying question to the user would help, ask the question.
@@ -24,14 +25,14 @@ Enclose the follow-up questions in double angle brackets. Example:
 Do no repeat questions that have already been asked.
 Make sure the last question ends with ">>".`;
 
-export class ChatService {
-  tokenLimit: number = 4000;
-
+export class QdrantChatService extends ChatService {
   constructor(
-    private config: AppConfig,
-    private model: BaseChatModel,
-    private vectorStore: VectorStore,
-  ) {}
+    config: AppConfig,
+    model: BaseChatModel,
+    vectorStore: VectorStore,
+  ) {
+    super(config, model, vectorStore); // Call the parent class constructor
+  }
 
   async run(messages: AIChatMessage[]): Promise<AIChatCompletion> {
     // STEP 1: Retrieve relevant documents from the search index
@@ -206,7 +207,7 @@ export default fp(
       }),
     });
 
-    const chatService = new ChatService(config, model, vectorStore);
+    const chatService = new QdrantChatService(config, model, vectorStore);
 
     fastify.decorate('chat', chatService);
   },
@@ -219,6 +220,6 @@ export default fp(
 // When using .decorate you have to specify added properties for Typescript
 declare module 'fastify' {
   export interface FastifyInstance {
-    chat: ChatService;
+    chat: ChatService; // Ensure this matches the unified ChatService type
   }
 }
