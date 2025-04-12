@@ -1,4 +1,4 @@
-import path from 'node:path';
+import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { type FastifyPluginAsync } from 'fastify';
 import AutoLoad, { type AutoloadPluginOptions } from '@fastify/autoload';
